@@ -17,8 +17,10 @@ app.use((err, req, res) => {
   res.sendStatus(500);
 });
 
-//force:true in development only
-db.sync({force: true}).then(() => {
+// force:true in development only
+// that would clear the database
+// every time we restart this application
+db.sync().then(() => {
   app.listen(process.env.PORT || 8080);
 });
 
