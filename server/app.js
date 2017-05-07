@@ -3,10 +3,12 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../db');
-const Client = require('../db/models/client');
+const bookSearch = require('./bookSearch');
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
+
+app.use('/api', bookSearch)
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
