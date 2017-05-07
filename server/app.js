@@ -8,7 +8,8 @@ const bookSearch = require('./bookSearch');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-app.use('/api', bookSearch)
+app.get('/api/range/:startMs/:endMs/:pageStart/:pageEnd', bookSearch)
+app.get('/api/range/:startMs/:endMs/:pageStart/:pageEnd/:searchString', bookSearch)
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));

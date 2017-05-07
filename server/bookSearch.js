@@ -4,16 +4,26 @@ const {Book, Mention, Comment, Page} = require('../db/models/Cluster');
 
 const router = express.Router();
 
-//api/range/startMs/endMs/pageStart/pageEnd/searchString
+const toCamelCase = (str) => str.toUpperCase(str[0]) + str.toLowerCase(str.slice(1));
 
-router.get('/range/:startMs/:endMs/', function (req, res) {
-	const { pageStart,
-			pageEnd,
-			searchString } = req.params;
-
+module.exports = function (req, res) {
+	const { searchString } = req.params;
 	const startMs = parseInt(req.params.startMs);
 	const endMs = parseInt(req.params.endMs);
+
+	const pageStart = parseInt(req.params.pageStart || "0");
+	const pageEnd = parseInt(req.params.pageEnd || "0");
+
 	const searchParams = {
+		where: {
+			title: {
+				$or: [
+					{$like: '%' + (searchString || "").toUpperCase() + '%'},
+					{$like: '%' + (searchString || "").toLowerCase() + '%'},
+					{$like: '%' + toCamelCase(searchString || "") + '%'},
+				]
+			}
+		},
 		include: [{
 			model: Mention,
 			where: { mentionDate: { $between: [startMs, endMs] } },
@@ -27,12 +37,13 @@ router.get('/range/:startMs/:endMs/', function (req, res) {
 			b.Mentions = null;
 			return b;
 		});
-		bks.sort((a,b) => b.mentionCount - a.mentionCount)
-		
-		res.send(bks);
-	});
-});
 
-module.exports = router;
+		//THESE NEED TO BE DELEGATED TO THE THING
+
+		bks.sort((a,b) => b.mentionCount - a.mentionCount)
+		res.send(bks.slice(pageStart,pageEnd));
+	});
+};
+
 
 
