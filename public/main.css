@@ -1,3 +1,21 @@
-body {
-  font-family: Avenir, sans-serif
+.appContainer {
+  font-family: 'Asar', serif;
+  padding: 0px 20px;
+}
+
+.nav {
+  margin: 30px 0px 15px;
+}
+
+.title {
+  font-size: 48px;
+}
+
+.description {
+  font-size: 24px;
+}
+
+.newsletter:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
